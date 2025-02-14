@@ -1,0 +1,17 @@
+# orchestrator/task_manager.py
+import redis
+from rq import Queue
+
+
+class TaskManager:
+    def __init__(self):
+        self.redis = redis.Redis(host='redis', port=6379)
+        self.queue = Queue(connection=self.redis)
+
+    def schedule_spiders(self):
+        for spider in config.ACTIVE_SPIDERS:
+            self.queue.enqueue(
+                'scrapy.crawler.CrawlerProcess.crawl',
+                spider,
+                **config.SCHEDULES[spider]
+            )
