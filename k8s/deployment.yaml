@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tender-scrapers
+spec:
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: scraper
+  template:
+    metadata:
+      labels:
+        app: scraper
+    spec:
+      containers:
+      - name: scraper
+        image: gcr.io/project-id/scraper:latest
+        envFrom:
+        - secretRef:
+            name: scraper-secrets
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "1"
+      - name: redis
+        image: redis:6-alpine
+        ports:
+        - containerPort: 6379
