@@ -1,0 +1,7 @@
+scrapy==2.5.0
+scrapy-zyte-smartproxy==1.0.0
+motor==2.5.0
+boto3==1.18.63
+botocore==1.21.63
+PyYAML==5.4.1
+redis==3.5.3
