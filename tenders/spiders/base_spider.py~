@@ -1,0 +1,35 @@
+import scrapy
+from scrapy_zyte_smartproxy import ZyteSmartProxyRequest
+
+
+class TenderSpider(scrapy.Spider):
+    custom_settings = {
+        'ZYTE_SMARTPROXY_ENABLED': True,
+        'ZYTE_SMARTPROXY_APIKEY': config.ZYTE_API_KEY
+    }
+
+    def start_requests(self):
+        yield ZyteSmartProxyRequest(
+            self.start_url,
+            callback=self.parse_list,
+            meta={'zyte_smartproxy': True}
+        )
+
+    def parse_list(self, response):
+        # Common pagination logic
+        for tender in response.css(self.selector['list_item']):
+            yield response.follow(
+                tender.css(self.selector['detail_link']).get(),
+                self.parse_detail,
+                meta={'login_required': True}
+            )
+
+        if next_page := response.css(self.selector['next_page']).get():
+            yield response.follow(next_page, self.parse_list)
+
+    def parse_detail(self, response):
+        # Common detail parsing using config/selectors.yaml
+        loader = ItemLoader(item=TenderItem(), response=response)
+        for field, selector in self.selector['detail_fields'].items():
+            loader.add_css(field, selector)
+        yield loader.load_item()

@@ -1,0 +1,15 @@
+nsw_tenders:
+  list_item: ".search-result-item"
+  detail_link: "a.result-title::attr(href)"
+  next_page: "li.next > a::attr(href)"
+  detail_fields:
+    title: "h1.tender-title::text"
+    closing_date: "div.deadline > span.value::text"
+    description: "div.tender-description ::text"
+    value: "div.estimated-value span::text"
+  file_selector: "a.document-link::attr(href)"
+
+vic_tenders:
+  list_item: "div.tender-listing"
+  detail_link: "h2 > a::attr(href)"
+  # ... other Victoria-specific selectors
