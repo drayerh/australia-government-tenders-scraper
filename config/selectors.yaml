@@ -1,0 +1,8 @@
+# config/selectors.yaml
+nsw:
+  list_item: '.tender-listing'
+  detail_link: 'a.more-info::attr(href)'
+  detail_fields:
+    title: 'h1.tender-title::text'
+    closing_date: '.deadline::text'
+    value: '.estimated-value span::text'
